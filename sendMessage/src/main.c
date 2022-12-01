@@ -6,10 +6,9 @@
 
 void *sendMessage()
 {
-
     while (1)
     {
-        inicia();
+        iniciaFila();
         readMessage();
     }
 }
@@ -24,6 +23,6 @@ int main()
 
     pthread_join(getMessage, NULL); // Blocante
 
-    // Thread para leitura da fila e escrita no socket
+    // Thread para leitura da fila e escrita no socket - TO DO
     return 0;
 }

@@ -12,21 +12,21 @@ int tam = 0;
 
 node *FILA;
 
-void inicia();
-int vazia();
-node *aloca();
-void insere(char[300]);
-char *retira();
+void iniciaFila();
+int vaziaFila();
+node *alocaFila();
+void insereFila(char[300]);
+char *retiraFila();
 // void exibe(node *FILA);
-void libera();
+void liberaFila();
 
-void inicia()
+void iniciaFila()
 {
     FILA = (node *)malloc(sizeof(node));
     FILA->prox = NULL;
 }
 
-int vazia()
+int vaziaFila()
 {
     if (FILA->prox == NULL)
         return 1;
@@ -34,7 +34,7 @@ int vazia()
         return 0;
 }
 
-node *aloca(char msg[300])
+node *alocaFila(char msg[300])
 {
     node *novo = (node *)malloc(sizeof(node));
     if (!novo)
@@ -49,12 +49,12 @@ node *aloca(char msg[300])
     }
 }
 
-void insere(char msg[300])
+void insereFila(char msg[300])
 {
-    node *novo = aloca(msg);
+    node *novo = alocaFila(msg);
     novo->prox = NULL;
 
-    if (vazia(FILA))
+    if (vaziaFila(FILA))
         FILA->prox = novo;
     else
     {
@@ -69,7 +69,7 @@ void insere(char msg[300])
     printf("Tamanho da fila: %d\n", tam);
 }
 
-char *retira()
+char *retiraFila()
 {
     if (FILA->prox == NULL)
     {
@@ -112,9 +112,9 @@ char *retira()
 //     printf("\n\n");
 // }
 
-void libera()
+void liberaFila()
 {
-    if (!vazia(FILA))
+    if (!vaziaFila(FILA))
     {
         node *proxNode,
             *atual;
