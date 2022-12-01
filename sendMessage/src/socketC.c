@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <string.h> /* memset() */
 #include <stdlib.h>
+#include "../includes/queue.h"
 
 #define MAX_MSG 300
 #define IP_SERVIDOR "127.0.0.1"
@@ -31,8 +32,17 @@ void sendMessageSocket(char mensagem[300])
     close(sd);
     exit(1);
   }
-  printf("Enviando parametro: %s\n", mensagem);
+  // printf("Enviando parametro: %s\n", mensagem);
 } /* fim do for (laco) */
+
+void *consumeQueue()
+{
+  while (1)
+  {
+    if (vaziaFila() == 0)
+      sendMessageSocket(retiraFila());
+  }
+}
 
 int createSocket()
 {
@@ -64,7 +74,7 @@ int createSocket()
     printf("%s: nao pode fazer um bind da porta\n", IP_SERVIDOR);
     exit(1);
   }
-  printf("{UDP, IP_Cli: %s, Porta_Cli: %u, IP_R: %s, Porta_R: %s}\n", inet_ntoa(ladoCli.sin_addr), ntohs(ladoCli.sin_port), IP_SERVIDOR, PORTA);
-  sendMessageSocket("Teste vITOR lAMEGO");
+  // printf("{UDP, IP_Cli: %s, Porta_Cli: %u, IP_R: %s, Porta_R: %s}\n", inet_ntoa(ladoCli.sin_addr), ntohs(ladoCli.sin_port), IP_SERVIDOR, PORTA);
+  consumeQueue();
   return 1;
 } /* fim do programa */

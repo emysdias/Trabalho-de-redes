@@ -3,11 +3,6 @@
 #include <string.h>
 #include "../includes/queue.h"
 
-struct Node
-{
-    char msg[300];
-    struct Node *prox;
-};
 int tam = 0;
 
 node *FILA;
@@ -66,7 +61,6 @@ void insereFila(char msg[300])
         tmp->prox = novo;
     }
     tam++;
-    printf("Tamanho da fila: %d\n", tam);
 }
 
 char *retiraFila()

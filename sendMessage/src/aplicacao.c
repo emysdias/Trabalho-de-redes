@@ -4,7 +4,7 @@
 void *readMessage()
 {
     char mensagem[200];
-    printf("Mensagem:\n");
+    printf("Mensagem: ");
     scanf(" %[^\n]", mensagem);
     insereFila(mensagem);
 }
