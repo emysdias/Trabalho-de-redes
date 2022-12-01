@@ -14,12 +14,25 @@
 #include <stdlib.h>
 
 #define MAX_MSG 300
-#define IP_SERVIDOR 0
-#define PORTA 0
+#define IP_SERVIDOR "127.0.0.1"
+#define PORTA "5000"
 int sd, rc, i;
 
 struct sockaddr_in ladoCli;  /* dados do cliente local   */
 struct sockaddr_in ladoServ; /* dados do servidor remoto */
+
+void sendMessageSocket(char mensagem[300])
+{
+  int rc;
+  rc = sendto(sd, mensagem, strlen(mensagem), 0, (struct sockaddr *)&ladoServ, sizeof(ladoServ));
+  if (rc < 0)
+  {
+    printf("%s: nao pode enviar dados %d \n", IP_SERVIDOR, i - 1);
+    close(sd);
+    exit(1);
+  }
+  printf("Enviando parametro: %s\n", mensagem);
+} /* fim do for (laco) */
 
 int createSocket()
 {
@@ -52,19 +65,6 @@ int createSocket()
     exit(1);
   }
   printf("{UDP, IP_Cli: %s, Porta_Cli: %u, IP_R: %s, Porta_R: %s}\n", inet_ntoa(ladoCli.sin_addr), ntohs(ladoCli.sin_port), IP_SERVIDOR, PORTA);
-
+  sendMessageSocket("Teste vITOR lAMEGO");
   return 1;
 } /* fim do programa */
-
-sendMessageSocket(char mensagem[300])
-{
-  int rc;
-  rc = sendto(sd, mensagem, strlen(mensagem), 0, (struct sockaddr *)&ladoServ, sizeof(ladoServ));
-  if (rc < 0)
-  {
-    printf("%s: nao pode enviar dados %d \n", IP_SERVIDOR, i - 1);
-    close(sd);
-    exit(1);
-  }
-  printf("Enviando parametro %d: %s\n", i - 2, mensagem);
-} /* fim do for (laco) */
