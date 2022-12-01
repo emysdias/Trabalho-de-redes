@@ -1,0 +1,1 @@
+extern void *createSocket(char[100], char[100], char[10]);
