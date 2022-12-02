@@ -46,12 +46,9 @@ void *createSocket(char ip_atual[100], char ip_server[100], char porta[10])
 
   printf("%s: esperando por dados no IP: %s, porta UDP numero: %s\n", ip_atual, ip_server, porta);
 
-  iniciaFila();
-
   /* Este servidor entra num loop infinito esperando dados de clientes */
   while (1)
   {
-
     /* inicia o buffer */
     memset(msg, 0x0, MAX_MSG);
     tam_Cli = sizeof(endCli);
@@ -61,7 +58,10 @@ void *createSocket(char ip_atual[100], char ip_server[100], char porta[10])
     {
       printf("%s: nao pode receber dados \n", ip_atual);
       continue;
-    } else {
+    }
+    else
+    {
+      // printf("Adicionando na fila: %s\n", msg);
       insereFila(msg);
     }
 

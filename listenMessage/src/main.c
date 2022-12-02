@@ -5,15 +5,19 @@
 #include <unistd.h>
 #include "../includes/queue.h"
 
-void *receiveMessage() {
+void *receiveMessage()
+{
     char message[300];
+    iniciaFila();
 
-    while(1) {
+    while (1)
+    {
         // sleep(2);
-        if (vaziaFila() == 0) {
-            char *buffer = retiraFila();
-            memcpy(message, buffer, strlen(buffer));
-            printf("Mensagem recebida => %s\n", message);
+        if (vaziaFila() == 0)
+        {
+            // char *buffer = retiraFila();
+            // memcpy(message, buffer, strlen(buffer));
+            printf("Mensagem recebida => %s\n", retiraFila());
         }
     }
 }
