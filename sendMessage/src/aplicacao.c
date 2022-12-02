@@ -9,21 +9,22 @@ void *readMessage(char quantidade_caracter[100])
     printf("Mensagem: ");
     scanf(" %[^\n]", mensagem);
     char palavra[SIZE];
-    int j = -1;
+    int j = 0;
+    memset(palavra, 0x0, SIZE);
     for (int i = 0; i < strlen(mensagem); i++)
     {
-        j++;
         palavra[j] += mensagem[i];
         if (j == atoi(quantidade_caracter) - 1)
         {
             insereFila(palavra);
-            memset(palavra, 0, SIZE);
+            memset(palavra, 0x0, SIZE);
             j = -1;
         }
+        j++;
     }
-    if (j != -1)
+    if (j != 0)
     {
         insereFila(palavra);
+        memset(palavra, 0x0, SIZE);
     }
-    memset(palavra, 0, SIZE);
 }

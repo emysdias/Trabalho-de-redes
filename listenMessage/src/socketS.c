@@ -11,6 +11,7 @@
 #include <unistd.h> /* close() */
 #include <string.h> /* memset() */
 #include <stdlib.h>
+#include "../includes/queue.h"
 
 #define MAX_MSG 100
 
@@ -45,6 +46,8 @@ void *createSocket(char ip_atual[100], char ip_server[100], char porta[10])
 
   printf("%s: esperando por dados no IP: %s, porta UDP numero: %s\n", ip_atual, ip_server, porta);
 
+  iniciaFila();
+
   /* Este servidor entra num loop infinito esperando dados de clientes */
   while (1)
   {
@@ -58,11 +61,13 @@ void *createSocket(char ip_atual[100], char ip_server[100], char porta[10])
     {
       printf("%s: nao pode receber dados \n", ip_atual);
       continue;
+    } else {
+      insereFila(msg);
     }
 
     /* imprime a mensagem recebida na tela do usuario */
-    printf("{UDP, IP_L: %s, Porta_L: %u", inet_ntoa(endServ.sin_addr), ntohs(endServ.sin_port));
-    printf(" IP_R: %s, Porta_R: %u} => %s\n", inet_ntoa(endCli.sin_addr), ntohs(endCli.sin_port), msg);
+    // printf("{UDP, IP_L: %s, Porta_L: %u", inet_ntoa(endServ.sin_addr), ntohs(endServ.sin_port));
+    // printf(" IP_R: %s, Porta_R: %u} => %s\n", inet_ntoa(endCli.sin_addr), ntohs(endCli.sin_port), msg);
 
   } /* fim do while */
 
