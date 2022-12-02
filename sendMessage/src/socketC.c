@@ -22,7 +22,7 @@ int sd, rc, i;
 struct sockaddr_in ladoCli;  /* dados do cliente local   */
 struct sockaddr_in ladoServ; /* dados do servidor remoto */
 
-void sendMessageSocket(char mensagem[300])
+void sendMessageSocket(char mensagem[MAX_MSG])
 {
   int rc;
   rc = sendto(sd, mensagem, strlen(mensagem), 0, (struct sockaddr *)&ladoServ, sizeof(ladoServ));
@@ -74,7 +74,7 @@ int createSocket()
     printf("%s: nao pode fazer um bind da porta\n", IP_SERVIDOR);
     exit(1);
   }
-  // printf("{UDP, IP_Cli: %s, Porta_Cli: %u, IP_R: %s, Porta_R: %s}\n", inet_ntoa(ladoCli.sin_addr), ntohs(ladoCli.sin_port), IP_SERVIDOR, PORTA);
+  printf("{UDP, IP_Cli: %s, Porta_Cli: %u, IP_R: %s, Porta_R: %s}\n", inet_ntoa(ladoCli.sin_addr), ntohs(ladoCli.sin_port), IP_SERVIDOR, PORTA);
   consumeQueue();
   return 1;
 } /* fim do programa */

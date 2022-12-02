@@ -49,7 +49,7 @@ void insereFila(char msg[300])
     node *novo = alocaFila(msg);
     novo->prox = NULL;
 
-    if (vaziaFila(FILA))
+    if (vaziaFila())
         FILA->prox = novo;
     else
     {
