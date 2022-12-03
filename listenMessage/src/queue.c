@@ -4,13 +4,14 @@
 #include "../includes/queue.h"
 
 int tam = 0;
+#define SIZE 300
 
 node *FILA;
 
 void iniciaFila();
 int vaziaFila();
 node *alocaFila();
-void insereFila(char[300]);
+void insereFila(char[SIZE]);
 char *retiraFila();
 // void exibe(node *FILA);
 void liberaFila();
@@ -29,7 +30,7 @@ int vaziaFila()
         return 0;
 }
 
-node *alocaFila(char msg[300])
+node *alocaFila(char msg[SIZE])
 {
     node *novo = (node *)malloc(sizeof(node));
     if (!novo)
@@ -44,7 +45,7 @@ node *alocaFila(char msg[300])
     }
 }
 
-void insereFila(char msg[300])
+void insereFila(char msg[SIZE])
 {
     node *novo = alocaFila(msg);
     novo->prox = NULL;

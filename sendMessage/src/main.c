@@ -22,6 +22,12 @@ int main(int argc, char *argv[])
     pthread_create(&socket, NULL, createSocket, NULL);
 
     // Thread para capturar mensagem do usuario
+
+    if (argv[1] == 0)
+    {
+        printf("Digite bin/run (quantidade de caracter), ex: bin/run 50\n\n");
+        exit(1);
+    }
     pthread_t getMessage;
     pthread_create(&getMessage, NULL, sendMessage(argv[1]), NULL);
 

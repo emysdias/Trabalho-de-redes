@@ -74,7 +74,7 @@ int createSocket()
     printf("%s: nao pode fazer um bind da porta\n", IP_SERVIDOR);
     exit(1);
   }
-  printf("{UDP, IP_Cli: %s, Porta_Cli: %u, IP_R: %s, Porta_R: %s}\n", inet_ntoa(ladoCli.sin_addr), ntohs(ladoCli.sin_port), IP_SERVIDOR, PORTA);
+  // printf("{UDP, IP_Cli: %s, Porta_Cli: %u, IP_R: %s, Porta_R: %s}\n", inet_ntoa(ladoCli.sin_addr), ntohs(ladoCli.sin_port), IP_SERVIDOR, PORTA);
   consumeQueue();
   return 1;
 } /* fim do programa */

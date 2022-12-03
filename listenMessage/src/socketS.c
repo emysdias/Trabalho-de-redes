@@ -15,7 +15,7 @@
 
 #define MAX_MSG 100
 
-void *createSocket(char ip_atual[100], char ip_server[100], char porta[10])
+void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[10])
 {
   int sd, rc, n;
   socklen_t tam_Cli;
