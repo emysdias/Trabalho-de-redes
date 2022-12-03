@@ -22,10 +22,52 @@ int sd, rc, i;
 struct sockaddr_in ladoCli;  /* dados do cliente local   */
 struct sockaddr_in ladoServ; /* dados do servidor remoto */
 
+typedef struct {
+  char *source;
+  char *target;
+  char *data;
+  char *lenght;
+}PDU;
+
+char *serialize(PDU pdu, int *buffer_len) {
+  int source_len = strlen(pdu.source);
+  int target_len = strlen(pdu.target);
+  int data_len = strlen(pdu.data);
+  int lenght_len = strlen(pdu.lenght);
+
+  int size = 4 * sizeof(int) + (source_len + target_len + data_len + lenght_len);
+
+  char *buf = malloc(sizeof(char) * (size + 1));
+
+  memcpy(buf, &source_len, sizeof(int));
+  memcpy(buf + sizeof(int), pdu.source, source_len);
+  memcpy(buf + sizeof(int) + source_len, &target_len, sizeof(int));
+  memcpy(buf + 2 * sizeof(int) + source_len, pdu.target, target_len);
+  memcpy(buf + 2 * sizeof(int) + source_len + target_len, &data_len, sizeof(int));
+  memcpy(buf + 3 * sizeof(int) + source_len + target_len, pdu.data, data_len);
+  memcpy(buf + 3 * sizeof(int) + source_len + target_len + data_len, &lenght_len, sizeof(int));
+  memcpy(buf + 4 * sizeof(int) + source_len + target_len + data_len, pdu.lenght, lenght_len);
+  buf[size] = '\0';
+
+  *buffer_len = size;
+
+  return buf;
+}
+
 void sendMessageSocket(char mensagem[MAX_MSG])
 {
+  PDU pdu;
+  pdu.source = "127.0.0.1";
+  pdu.target = "127.0.0.1";
+  pdu.data = mensagem;
+  pdu.lenght = "50";
+
+  int buffer_len = 0;
+
+  char *buffer = serialize(pdu, &buffer_len);
+
   int rc;
-  rc = sendto(sd, mensagem, strlen(mensagem), 0, (struct sockaddr *)&ladoServ, sizeof(ladoServ));
+  rc = sendto(sd, buffer, MAX_MSG, 0, (struct sockaddr *)&ladoServ, sizeof(ladoServ));
   if (rc < 0)
   {
     printf("%s: nao pode enviar dados %d \n", IP_SERVIDOR, i - 1);

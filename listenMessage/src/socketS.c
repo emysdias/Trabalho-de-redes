@@ -15,6 +15,38 @@
 
 #define MAX_MSG 100
 
+typedef struct {
+  char *source;
+  char *target;
+  char *data;
+  char *lenght;
+}PDU;
+
+PDU deserialize(char *buf) {
+  PDU pdu;
+  int source_len;
+  int target_len;
+  int data_len;
+  int lenght_len;
+
+  memcpy(&source_len, buf, sizeof(int));
+  memcpy(&target_len, buf + sizeof(int) + source_len, sizeof(int));
+  memcpy(&data_len, buf + 2 * sizeof(int) + source_len + target_len, sizeof(int));
+  memcpy(&lenght_len, buf + 3 * sizeof(int) + source_len + target_len + data_len, sizeof(int));
+  
+  pdu.source = malloc(source_len * sizeof(char));
+  pdu.target = malloc(target_len * sizeof(char));
+  pdu.data = malloc(data_len * sizeof(char));
+  pdu.lenght = malloc(lenght_len * sizeof(char));
+  
+  memcpy(pdu.source, buf + sizeof(int), source_len);
+  memcpy(pdu.target, buf + 2 * sizeof(int) + source_len, target_len);
+  memcpy(pdu.data, buf + 3 * sizeof(int) + source_len + target_len, data_len);
+  memcpy(pdu.lenght, buf + 4 * sizeof(int) + source_len + target_len + data_len, lenght_len);
+
+  return pdu;
+}
+
 void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[10])
 {
   int sd, rc, n;
@@ -22,6 +54,7 @@ void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[1
   struct sockaddr_in endCli;  /* Vai conter identificacao do cliente */
   struct sockaddr_in endServ; /* Vai conter identificacao do servidor local */
   char msg[MAX_MSG];          /* Buffer que armazena os dados que chegaram via rede */
+  PDU pdu;
 
   /* Criacao do socket UDP */
   sd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -62,7 +95,9 @@ void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[1
     else
     {
       // printf("Adicionando na fila: %s\n", msg);
-      insereFila(msg);
+      pdu = deserialize(&msg);
+
+      insereFila(pdu.data);
     }
 
     /* imprime a mensagem recebida na tela do usuario */
