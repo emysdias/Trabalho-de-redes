@@ -21,15 +21,18 @@ int sd, rc, i;
 
 struct sockaddr_in ladoCli;  /* dados do cliente local   */
 struct sockaddr_in ladoServ; /* dados do servidor remoto */
+int negociouTamanho = 0;
 
-typedef struct {
+typedef struct
+{
   char *source;
   char *target;
   char *data;
   char *lenght;
-}PDU;
+} PDU;
 
-char *serialize(PDU pdu, int *buffer_len) {
+char *serialize(PDU pdu, int *buffer_len)
+{
   int source_len = strlen(pdu.source);
   int target_len = strlen(pdu.target);
   int data_len = strlen(pdu.data);
@@ -77,12 +80,44 @@ void sendMessageSocket(char mensagem[MAX_MSG])
   // printf("Enviando parametro: %s\n", mensagem);
 } /* fim do for (laco) */
 
+void negociaTamanhoQuadro()
+{
+  char tamanho[10];
+  char tamanhoRecebido[10];
+
+  printf("Qual o tamanho desejado para o quadro ?\n");
+  scanf(" %s", tamanho);
+
+  int rc;
+  rc = sendto(sd, tamanho, MAX_MSG, 0, (struct sockaddr *)&ladoServ, sizeof(ladoServ));
+  /* recebe a mensagem  */
+  printf("Esperando confirmacao do server\n");
+  int n;
+
+  memset(tamanhoRecebido, 0x0, 10);
+  n = recvfrom(sd, tamanhoRecebido, MAX_MSG, 0, (struct sockaddr *)&ladoServ, sizeof(ladoServ));
+
+  printf("%s %s %d\n", tamanho, tamanhoRecebido, n);
+  if (!strcmp(tamanho, tamanhoRecebido))
+  {
+    printf("Tamanho aceitado!\n");
+    negociouTamanho = 1;
+  }
+  else
+  {
+    printf("Tamanho recusado! Tamanho solicitado: %s\n", tamanhoRecebido);
+  }
+}
+
 void *consumeQueue()
 {
   while (1)
   {
-    if (vaziaFila() == 0)
-      sendMessageSocket(retiraFila());
+    if (negociouTamanho)
+    {
+      if (vaziaFila() == 0)
+        sendMessageSocket(retiraFila());
+    }
   }
 }
 

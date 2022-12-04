@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include "../includes/queue.h"
+#include "../includes/socketC.h"
 
 #define SIZE 300
+
+char quantidade_caracter[10];
 
 void *readMessage(char quantidade_caracter[100])
 {
@@ -19,11 +22,13 @@ void *readMessage(char quantidade_caracter[100])
     scanf(" %[^\n]", resposta);
     strcat(resposta, ".txt");
 
-    if ((file = fopen(strcat(localArquivo, resposta), "r")) == NULL) //le arquivo digitado
+    if ((file = fopen(strcat(localArquivo, resposta), "r")) == NULL) // le arquivo digitado
     {
         printf("Arquivo não existe\n");
         exit(1);
     }
+
+    negociaTamanhoQuadro();
 
     while (fscanf(file, " %[^\n]", conteudoArquivo) != EOF)
     {

@@ -14,15 +14,22 @@
 #include "../includes/queue.h"
 
 #define MAX_MSG 100
+int negociouTamanho = 0;
 
-typedef struct {
+socklen_t tam_Cli;
+struct sockaddr_in endCli;  /* Vai conter identificacao do cliente */
+struct sockaddr_in endServ; /* Vai conter identificacao do servidor local */
+
+typedef struct
+{
   char *source;
   char *target;
   char *data;
   char *lenght;
-}PDU;
+} PDU;
 
-PDU deserialize(char *buf) {
+PDU deserialize(char *buf)
+{
   PDU pdu;
   int source_len;
   int target_len;
@@ -33,12 +40,12 @@ PDU deserialize(char *buf) {
   memcpy(&target_len, buf + sizeof(int) + source_len, sizeof(int));
   memcpy(&data_len, buf + 2 * sizeof(int) + source_len + target_len, sizeof(int));
   memcpy(&lenght_len, buf + 3 * sizeof(int) + source_len + target_len + data_len, sizeof(int));
-  
+
   pdu.source = malloc(source_len * sizeof(char));
   pdu.target = malloc(target_len * sizeof(char));
   pdu.data = malloc(data_len * sizeof(char));
   pdu.lenght = malloc(lenght_len * sizeof(char));
-  
+
   memcpy(pdu.source, buf + sizeof(int), source_len);
   memcpy(pdu.target, buf + 2 * sizeof(int) + source_len, target_len);
   memcpy(pdu.data, buf + 3 * sizeof(int) + source_len + target_len, data_len);
@@ -47,13 +54,31 @@ PDU deserialize(char *buf) {
   return pdu;
 }
 
+void negociaTamanho(char msg[10], int sd)
+{
+  char tamanho[10];
+  printf("Cliente deseja mandar mensagens de tamanho: %s\n", msg);
+  printf("Qual o tamanho deseja receber as mensagens: ");
+  scanf(" %s", tamanho);
+  int rc;
+  rc = sendto(sd, tamanho, MAX_MSG, 0, (struct sockaddr *)&endCli, sizeof(endCli));
+
+  if (!strcmp(tamanho, msg))
+  {
+    printf("Tamanho negociado com sucesso!\n");
+    negociouTamanho = 1;
+  }
+  else
+  {
+    printf("Tamanho nao negociado\n");
+  }
+}
+
 void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[10])
 {
   int sd, rc, n;
-  socklen_t tam_Cli;
-  struct sockaddr_in endCli;  /* Vai conter identificacao do cliente */
-  struct sockaddr_in endServ; /* Vai conter identificacao do servidor local */
-  char msg[MAX_MSG];          /* Buffer que armazena os dados que chegaram via rede */
+
+  char msg[MAX_MSG]; /* Buffer que armazena os dados que chegaram via rede */
   PDU pdu;
 
   /* Criacao do socket UDP */
@@ -94,10 +119,17 @@ void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[1
     }
     else
     {
-      // printf("Adicionando na fila: %s\n", msg);
-      pdu = deserialize(&msg);
+      if (!negociouTamanho)
+      {
+        negociaTamanho(msg, sd);
+      }
+      else
+      {
+        pdu = deserialize(&msg);
 
-      insereFila(pdu.data);
+        insereFila(pdu.data);
+      }
+      // printf("Adicionando na fila: %s\n", msg);
     }
 
     /* imprime a mensagem recebida na tela do usuario */
