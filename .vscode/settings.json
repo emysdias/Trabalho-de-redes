@@ -1,6 +1,9 @@
 {
     "files.associations": {
         "queue.h": "c",
-        "socketc.h": "c"
+        "socketc.h": "c",
+        "stdlib.h": "c",
+        "stdio.h": "c",
+        "string.h": "c"
     }
 }

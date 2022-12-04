@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "../includes/queue.h"
+#include "../includes/socketS.h"
 
 void *receiveMessage()
 {
@@ -12,13 +13,10 @@ void *receiveMessage()
 
     while (1)
     {
-        // sleep(2);
-        if (vaziaFila() == 0)
+        if (!vaziaFila())
         {
-            // char *buffer = retiraFila();
-            // memcpy(message, buffer, strlen(buffer));
             printf("Mensagem recebida => %s\n", retiraFila());
-        }
+                }
     }
 }
 
