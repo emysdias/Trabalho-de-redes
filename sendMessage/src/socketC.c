@@ -13,6 +13,7 @@
 #include <string.h> /* memset() */
 #include <stdlib.h>
 #include "../includes/queue.h"
+#include "../includes/aplicacao.h"
 
 #define MAX_MSG 300
 #define IP_SERVIDOR "127.0.0.1"
@@ -80,7 +81,7 @@ void sendMessageSocket(char mensagem[MAX_MSG])
   // printf("Enviando parametro: %s\n", mensagem);
 } /* fim do for (laco) */
 
-char *negociaTamanhoQuadro()
+void negociaTamanhoQuadro()
 {
   char tamanho[10];
   char tamanhoRecebido[MAX_MSG];
@@ -99,14 +100,14 @@ char *negociaTamanhoQuadro()
 
   if (!strcmp(tamanho, tamanhoRecebido))
   {
-    printf("Tamanho aceitado!\n");
+    printf("Tamanho aceito!\n");
     negociouTamanho = 1;
-    return tamanho;
+    strcpy(quantidade_caracter, tamanho);
   }
   else
   {
     printf("Tamanho recusado! Tamanho solicitado: %s\n", tamanhoRecebido);
-    return tamanhoRecebido;
+    strcpy(quantidade_caracter, "-1");
   }
 }
 

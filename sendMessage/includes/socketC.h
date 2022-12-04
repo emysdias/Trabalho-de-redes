@@ -1,4 +1,4 @@
 extern int createSocket();
 extern void sendMessageSocket(char[300]);
 extern int negociouTamanho;
-extern char *negociaTamanhoQuadro();
+extern void negociaTamanhoQuadro();

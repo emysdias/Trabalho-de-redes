@@ -1,11 +1,12 @@
 #include <stdio.h>
+#include <string.h>
 #include <sys/stat.h>
 #include "../includes/queue.h"
 #include "../includes/socketC.h"
 
 #define SIZE 300
 
-char quantidade_caracter[10];
+char quantidade_caracter[10] = "-1";
 
 void *readMessage()
 {
@@ -28,31 +29,34 @@ void *readMessage()
         exit(1);
     }
 
-    char quantidade_caracter[100];
-    strcpy(quantidade_caracter, negociaTamanhoQuadro());
+    negociaTamanhoQuadro();
 
-    while (fscanf(file, " %[^\n]", conteudoArquivo) != EOF)
+    if (strcmp("-1", quantidade_caracter))
     {
-        strcpy(mensagem, conteudoArquivo);
-        memset(palavra, 0x0, SIZE);
-        for (int i = 0; i < strlen(mensagem); i++)
+        printf("Tamanho utilizado: %s\n", quantidade_caracter);
+        while (fscanf(file, " %[^\n]", conteudoArquivo) != EOF)
         {
-            palavra[j] = mensagem[i];
+            strcpy(mensagem, conteudoArquivo);
+            memset(palavra, 0x0, SIZE);
+            for (int i = 0; i < strlen(mensagem); i++)
+            {
+                palavra[j] = mensagem[i];
 
-            if (j == atoi(quantidade_caracter) - 1)
+                if (j == atoi(quantidade_caracter) - 1)
+                {
+                    insereFila(palavra);
+                    memset(palavra, 0x0, SIZE);
+                    j = -1;
+                }
+                j++;
+            }
+            if (j != 0)
             {
                 insereFila(palavra);
                 memset(palavra, 0x0, SIZE);
-                j = -1;
             }
-            j++;
+            j = 0;
         }
-        if (j != 0)
-        {
-            insereFila(palavra);
-            memset(palavra, 0x0, SIZE);
-        }
-        j = 0;
     }
     fclose(file);
 }
