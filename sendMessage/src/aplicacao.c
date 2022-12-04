@@ -21,6 +21,8 @@ void *readMessage()
 
     printf("Digite o nome do arquivo de mensagens: "); // exemplo 'mensagens'
     scanf(" %[^\n]", resposta);
+    mandaNomeArquivo(resposta);
+
     strcat(resposta, ".txt");
 
     if ((file = fopen(strcat(localArquivo, resposta), "r")) == NULL) // le arquivo digitado
@@ -36,26 +38,7 @@ void *readMessage()
         printf("Tamanho utilizado: %s\n", quantidade_caracter);
         while (fscanf(file, " %[^\n]", conteudoArquivo) != EOF)
         {
-            strcpy(mensagem, conteudoArquivo);
-            memset(palavra, 0x0, SIZE);
-            for (int i = 0; i < strlen(mensagem); i++)
-            {
-                palavra[j] = mensagem[i];
-
-                if (j == atoi(quantidade_caracter) - 1)
-                {
-                    insereFila(palavra);
-                    memset(palavra, 0x0, SIZE);
-                    j = -1;
-                }
-                j++;
-            }
-            if (j != 0)
-            {
-                insereFila(palavra);
-                memset(palavra, 0x0, SIZE);
-            }
-            j = 0;
+            insereFila(conteudoArquivo);
         }
     }
     fclose(file);

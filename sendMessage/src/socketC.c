@@ -81,16 +81,36 @@ void sendMessageSocket(char mensagem[MAX_MSG])
   // printf("Enviando parametro: %s\n", mensagem);
 } /* fim do for (laco) */
 
+void mandaNomeArquivo(char resposta[MAX_MSG])
+{
+  int rc;
+
+  rc = sendto(sd, resposta, MAX_MSG, 0, (struct sockaddr *)&ladoServ, sizeof(ladoServ));
+  if (rc < 0)
+  {
+    printf("%s: nao pode enviar dados %d \n", IP_SERVIDOR, i - 1);
+    close(sd);
+    exit(1);
+  }
+}
+
 void negociaTamanhoQuadro()
 {
   char tamanho[10];
   char tamanhoRecebido[MAX_MSG];
 
-  printf("Qual o tamanho desejado para o quadro ?\n");
+  printf("Digite o tamanho desejado para o quadro: ");
   scanf(" %s", tamanho);
 
   int rc;
   rc = sendto(sd, tamanho, MAX_MSG, 0, (struct sockaddr *)&ladoServ, sizeof(ladoServ));
+
+  if (rc < 0)
+  {
+    printf("%s: nao pode enviar dados %d \n", IP_SERVIDOR, i - 1);
+    close(sd);
+    exit(1);
+  }
   /* recebe a mensagem  */
   printf("Esperando confirmacao do server\n");
   int n;

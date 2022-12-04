@@ -14,11 +14,18 @@
 #include "../includes/queue.h"
 
 #define MAX_MSG 100
+#define SIZE 300
+#define IP_SERVIDOR "127.0.0.1"
+
+int quantidadeCaracter = 0;
 int negociouTamanho = 0;
+int recebeNomeArquivo = 0;
+char nomeArquivo[MAX_MSG];
 
 socklen_t tam_Cli;
 struct sockaddr_in endCli;  /* Vai conter identificacao do cliente */
 struct sockaddr_in endServ; /* Vai conter identificacao do servidor local */
+FILE *file;
 
 typedef struct
 {
@@ -54,14 +61,55 @@ PDU deserialize(char *buf)
   return pdu;
 }
 
+void pegarNomeArquivo(char msg[10])
+{
+  strcpy(nomeArquivo, msg);
+  strcat(nomeArquivo, ".txt");
+  recebeNomeArquivo = 1;
+}
+
+void apagarConteudoArquivo()
+{
+  char localArquivo[300] = {"../listenMessage/files/"};
+  if ((file = fopen(strcat(localArquivo, nomeArquivo), "w")) == NULL) // le arquivo digitado
+  {
+    printf("Erro ao abrir arquivo\n");
+    exit(1);
+  }
+  fclose(file);
+}
+
+void criaArquivo(char msg[10])
+{
+  char localArquivo[300] = {"../listenMessage/files/"};
+  if ((file = fopen(strcat(localArquivo, nomeArquivo), "a+")) != NULL) // le arquivo digitado
+  {
+    fprintf(file, "%s\n", msg);
+  }
+  else
+  {
+    printf("Erro ao abrir arquivo\n");
+    exit(1);
+  }
+  fclose(file);
+}
+
 void negociaTamanho(char msg[10], int sd)
 {
+  int rc, i;
   char tamanho[10];
   printf("Cliente deseja mandar mensagens de tamanho: %s\n", msg);
   printf("Qual o tamanho deseja receber as mensagens: ");
   scanf(" %s", tamanho);
-  int rc;
+  quantidadeCaracter = atoi(tamanho);
+
   rc = sendto(sd, tamanho, MAX_MSG, 0, (struct sockaddr *)&endCli, sizeof(endCli));
+  if (rc < 0)
+  {
+    printf("%s: nao pode enviar dados %d \n", IP_SERVIDOR, i - 1);
+    close(sd);
+    exit(1);
+  }
 
   if (!strcmp(tamanho, msg))
   {
@@ -76,7 +124,9 @@ void negociaTamanho(char msg[10], int sd)
 
 void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[10])
 {
-  int sd, rc, n;
+  int sd, rc, n, j = 0;
+  char mensagem[SIZE];
+  char palavra[SIZE];
 
   char msg[MAX_MSG]; /* Buffer que armazena os dados que chegaram via rede */
   PDU pdu;
@@ -119,15 +169,44 @@ void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[1
     }
     else
     {
-      if (!negociouTamanho)
+      if (!recebeNomeArquivo)
       {
-        negociaTamanho(msg, sd);
+        pegarNomeArquivo(msg);
       }
       else
       {
-        pdu = deserialize(&msg);
+        if (!negociouTamanho)
+        {
+          negociaTamanho(msg, sd);
+          apagarConteudoArquivo();
+        }
+        else
+        {
+          pdu = deserialize(&msg);
 
-        insereFila(pdu.data);
+          criaArquivo(pdu.data);
+
+          strcpy(mensagem, pdu.data);
+          memset(palavra, 0x0, SIZE);
+          for (int i = 0; i < strlen(mensagem); i++)
+          {
+            palavra[j] = mensagem[i];
+
+            if (j == quantidadeCaracter - 1)
+            {
+              insereFila(palavra);
+              memset(palavra, 0x0, SIZE);
+              j = -1;
+            }
+            j++;
+          }
+          if (j != 0)
+          {
+            insereFila(palavra);
+            memset(palavra, 0x0, SIZE);
+          }
+          j = 0;
+        }
       }
       // printf("Adicionando na fila: %s\n", msg);
     }
