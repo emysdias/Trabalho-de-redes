@@ -174,7 +174,6 @@ void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[1
           j = 0;
         }
       }
-      // printf("Adicionando na fila: %s\n", msg);
     }
 
     /* imprime a mensagem recebida na tela do usuario */
