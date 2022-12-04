@@ -148,10 +148,20 @@ void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[1
         }
         else
         {
+
           pdu = deserialize(&msg);
-          strcat(arquivo, pdu.data);
-          insereFila(pdu.data);
-          criaArquivo(arquivo);
+
+          if (!strcmp(pdu.data, "FIM"))
+          {
+            negociouTamanho = 0;
+            recebeNomeArquivo = 0;
+          }
+          else
+          {
+            strcat(arquivo, pdu.data);
+            insereFila(pdu.data);
+            criaArquivo(arquivo);
+          }
         }
       }
     }

@@ -77,7 +77,8 @@ void sendMessageSocket(char mensagem[MAX_MSG])
     close(sd);
     exit(1);
   }
-  // printf("Enviando parametro: %s\n", mensagem);
+  if (strcmp(pdu.data, "FIM"))
+    negociouTamanho = 0;
 } /* fim do for (laco) */
 
 void mandaNomeArquivo(char resposta[MAX_MSG])
@@ -134,11 +135,8 @@ void *consumeQueue()
 {
   while (1)
   {
-    if (negociouTamanho)
-    {
-      if (!vaziaFila())
-        sendMessageSocket(retiraFila());
-    }
+    if (!vaziaFila())
+      sendMessageSocket(retiraFila());
   }
 }
 

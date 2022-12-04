@@ -72,6 +72,7 @@ void *readMessage()
             strcat(conteudoArquivo, "\n");
             cutMessage(conteudoArquivo, tamanhoLimite);
         }
+        insereFila("FIM");
     }
     fclose(file);
 }
