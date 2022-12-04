@@ -12,6 +12,7 @@
 #include <string.h> /* memset() */
 #include <stdlib.h>
 #include "../includes/queue.h"
+#include "../includes/file.h"
 
 #define MAX_MSG 100
 #define SIZE 300
@@ -19,13 +20,10 @@
 
 int quantidadeCaracter = 0;
 int negociouTamanho = 0;
-int recebeNomeArquivo = 0;
-char nomeArquivo[MAX_MSG];
 
 socklen_t tam_Cli;
 struct sockaddr_in endCli;  /* Vai conter identificacao do cliente */
 struct sockaddr_in endServ; /* Vai conter identificacao do servidor local */
-FILE *file;
 
 typedef struct
 {
@@ -59,39 +57,6 @@ PDU deserialize(char *buf)
   memcpy(pdu.lenght, buf + 4 * sizeof(int) + source_len + target_len + data_len, lenght_len);
 
   return pdu;
-}
-
-void pegarNomeArquivo(char msg[10])
-{
-  strcpy(nomeArquivo, msg);
-  strcat(nomeArquivo, ".txt");
-  recebeNomeArquivo = 1;
-}
-
-void apagarConteudoArquivo()
-{
-  char localArquivo[300] = {"../listenMessage/files/"};
-  if ((file = fopen(strcat(localArquivo, nomeArquivo), "w")) == NULL) // le arquivo digitado
-  {
-    printf("Erro ao abrir arquivo\n");
-    exit(1);
-  }
-  fclose(file);
-}
-
-void criaArquivo(char msg[10])
-{
-  char localArquivo[300] = {"../listenMessage/files/"};
-  if ((file = fopen(strcat(localArquivo, nomeArquivo), "a+")) != NULL) // le arquivo digitado
-  {
-    fprintf(file, "%s\n", msg);
-  }
-  else
-  {
-    printf("Erro ao abrir arquivo\n");
-    exit(1);
-  }
-  fclose(file);
 }
 
 void negociaTamanho(char msg[10], int sd)
