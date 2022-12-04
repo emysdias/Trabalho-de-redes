@@ -15,7 +15,7 @@ void *readMessage()
     char localArquivo[SIZE] = {"../sendMessage/files/"};
     char resposta[SIZE];
     char palavra[SIZE];
-    char *conteudoArquivo = (int *)malloc(sizeof(int));
+    char *conteudoArquivo;
     FILE *file;
     int count = 0;
 
@@ -35,6 +35,7 @@ void *readMessage()
 
     if (strcmp("-1", quantidade_caracter))
     {
+        conteudoArquivo = (int *)malloc(atoi(quantidade_caracter) * SIZE);
         printf("Tamanho utilizado: %s\n", quantidade_caracter);
         while (fscanf(file, " %[^\n]", conteudoArquivo) != EOF)
         {
