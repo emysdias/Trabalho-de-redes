@@ -21,7 +21,6 @@ void *readMessage()
 
     printf("Digite o nome do arquivo de mensagens: "); // exemplo 'mensagens'
     scanf(" %[^\n]", resposta);
-    mandaNomeArquivo(resposta);
 
     strcat(resposta, ".txt");
 
@@ -31,6 +30,7 @@ void *readMessage()
         exit(1);
     }
 
+    mandaNomeArquivo(resposta);
     negociaTamanhoQuadro();
 
     if (strcmp("-1", quantidade_caracter))
