@@ -64,7 +64,6 @@ PDU deserialize(char *buf)
 void pegarNomeArquivo(char msg[10])
 {
   strcpy(nomeArquivo, msg);
-  strcat(nomeArquivo, ".txt");
   recebeNomeArquivo = 1;
 }
 
