@@ -7,7 +7,7 @@
 
 char quantidade_caracter[10];
 
-void *readMessage(char quantidade_caracter[100])
+void *readMessage()
 {
     int j = 0;
     char mensagem[SIZE];
@@ -28,7 +28,8 @@ void *readMessage(char quantidade_caracter[100])
         exit(1);
     }
 
-    negociaTamanhoQuadro();
+    char quantidade_caracter[100];
+    strcpy(quantidade_caracter, negociaTamanhoQuadro());
 
     while (fscanf(file, " %[^\n]", conteudoArquivo) != EOF)
     {

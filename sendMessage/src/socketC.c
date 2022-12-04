@@ -80,10 +80,10 @@ void sendMessageSocket(char mensagem[MAX_MSG])
   // printf("Enviando parametro: %s\n", mensagem);
 } /* fim do for (laco) */
 
-void negociaTamanhoQuadro()
+char *negociaTamanhoQuadro()
 {
   char tamanho[10];
-  char tamanhoRecebido[10];
+  char tamanhoRecebido[MAX_MSG];
 
   printf("Qual o tamanho desejado para o quadro ?\n");
   scanf(" %s", tamanho);
@@ -94,18 +94,19 @@ void negociaTamanhoQuadro()
   printf("Esperando confirmacao do server\n");
   int n;
 
-  memset(tamanhoRecebido, 0x0, 10);
-  n = recvfrom(sd, tamanhoRecebido, MAX_MSG, 0, (struct sockaddr *)&ladoServ, sizeof(ladoServ));
+  memset(tamanhoRecebido, 0x0, MAX_MSG);
+  recv(sd, tamanhoRecebido, sizeof(tamanhoRecebido), 0);
 
-  printf("%s %s %d\n", tamanho, tamanhoRecebido, n);
   if (!strcmp(tamanho, tamanhoRecebido))
   {
     printf("Tamanho aceitado!\n");
     negociouTamanho = 1;
+    return tamanho;
   }
   else
   {
     printf("Tamanho recusado! Tamanho solicitado: %s\n", tamanhoRecebido);
+    return tamanhoRecebido;
   }
 }
 
@@ -135,7 +136,6 @@ int createSocket()
 
   /* Criando um socket. Nesse momento a variavel       */
   /* sd contem apenas dados sobre familia e protocolo  */
-
   sd = socket(AF_INET, SOCK_DGRAM, 0);
   if (sd < 0)
   {

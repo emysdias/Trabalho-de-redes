@@ -5,13 +5,13 @@
 #include "../includes/queue.h"
 #include "../includes/socketC.h"
 
-void *sendMessage(char quantidade_caracter[100])
+void *sendMessage()
 {
 
     iniciaFila();
     while (1)
     {
-        readMessage(quantidade_caracter);
+        readMessage();
     }
 }
 
@@ -23,13 +23,8 @@ int main(int argc, char *argv[])
 
     // Thread para capturar mensagem do usuario
 
-    if (argv[1] == 0)
-    {
-        printf("Digite bin/run (quantidade de caracter), ex: bin/run 50\n\n");
-        exit(1);
-    }
     pthread_t getMessage;
-    pthread_create(&getMessage, NULL, sendMessage(argv[1]), NULL);
+    pthread_create(&getMessage, NULL, sendMessage, NULL);
 
     pthread_join(getMessage, NULL); // Blocante
     pthread_join(socket, NULL);
