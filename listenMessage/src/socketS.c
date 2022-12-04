@@ -90,9 +90,8 @@ void negociaTamanho(char msg[10], int sd)
 
 void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[10])
 {
-  int sd, rc, n, j = 0;
-  char mensagem[SIZE];
-  char palavra[SIZE];
+  int sd, rc, n = 0;
+  char arquivo[300];
 
   char msg[MAX_MSG]; /* Buffer que armazena os dados que chegaram via rede */
   PDU pdu;
@@ -125,6 +124,7 @@ void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[1
   {
     /* inicia o buffer */
     memset(msg, 0x0, MAX_MSG);
+    memset(arquivo, 0X0, 300);
     tam_Cli = sizeof(endCli);
     /* recebe a mensagem  */
     n = recvfrom(sd, msg, MAX_MSG, 0, (struct sockaddr *)&endCli, &tam_Cli);
@@ -149,37 +149,12 @@ void *createSocket(char ip_atual[MAX_MSG], char ip_server[MAX_MSG], char porta[1
         else
         {
           pdu = deserialize(&msg);
-
-          criaArquivo(pdu.data);
-
-          strcpy(mensagem, pdu.data);
-          memset(palavra, 0x0, SIZE);
-          for (int i = 0; i < strlen(mensagem); i++)
-          {
-            palavra[j] = mensagem[i];
-
-            if (j == quantidadeCaracter - 1)
-            {
-              insereFila(palavra);
-              memset(palavra, 0x0, SIZE);
-              j = -1;
-            }
-            j++;
-          }
-          if (j != 0)
-          {
-            insereFila(palavra);
-            memset(palavra, 0x0, SIZE);
-          }
-          j = 0;
+          strcat(arquivo, pdu.data);
+          insereFila(pdu.data);
+          criaArquivo(arquivo);
         }
       }
     }
-
-    /* imprime a mensagem recebida na tela do usuario */
-    // printf("{UDP, IP_L: %s, Porta_L: %u", inet_ntoa(endServ.sin_addr), ntohs(endServ.sin_port));
-    // printf(" IP_R: %s, Porta_R: %u} => %s\n", inet_ntoa(endCli.sin_addr), ntohs(endCli.sin_port), msg);
-
   } /* fim do while */
 
 } /* fim do programa */

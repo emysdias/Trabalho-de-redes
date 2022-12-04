@@ -22,12 +22,12 @@ void apagarConteudoArquivo()
     fclose(file);
 }
 
-void criaArquivo(char msg[10])
+void criaArquivo(char msg[300])
 {
     char localArquivo[300] = {"../listenMessage/files/"};
     if ((file = fopen(strcat(localArquivo, nomeArquivo), "a+")) != NULL) // le arquivo digitado
     {
-        fprintf(file, "%s\n", msg);
+        fprintf(file, "%s", msg);
     }
     else
     {

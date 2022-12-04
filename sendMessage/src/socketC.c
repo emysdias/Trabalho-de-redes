@@ -67,7 +67,6 @@ void sendMessageSocket(char mensagem[MAX_MSG])
   pdu.lenght = "50";
 
   int buffer_len = 0;
-
   char *buffer = serialize(pdu, &buffer_len);
 
   int rc;
@@ -137,7 +136,7 @@ void *consumeQueue()
   {
     if (negociouTamanho)
     {
-      if (vaziaFila() == 0)
+      if (!vaziaFila())
         sendMessageSocket(retiraFila());
     }
   }

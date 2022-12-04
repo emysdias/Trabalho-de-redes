@@ -16,7 +16,7 @@ void *receiveMessage()
         if (!vaziaFila())
         {
             printf("Mensagem recebida => %s\n", retiraFila());
-                }
+        }
     }
 }
 
