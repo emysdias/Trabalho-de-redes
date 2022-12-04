@@ -119,6 +119,7 @@ void negociaTamanho(char msg[10], int sd)
   else
   {
     printf("Tamanho nao negociado\n");
+    recebeNomeArquivo = 0;
   }
 }
 
