@@ -329,7 +329,6 @@ void *listenOtherSide()
 
 void *consumeQueue()
 {
-    iniciaFila();
     while (!vaziaFila())
     {
         sendMessageSocket(retiraFila());

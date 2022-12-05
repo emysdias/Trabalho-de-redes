@@ -11,7 +11,6 @@
 char quantidade_caracter[10] = "-1";
 int envioOk = 0;
 int pacotesEnviados = 0;
-int listening = 0;
 
 void cutMessage(char *mensagem, int quantidadeCaracter)
 {
@@ -89,6 +88,7 @@ void *readMessage()
                 cutMessage(conteudoArquivo, tamanhoLimite);
             }
             insereFila("FIM");
+            printf("%d\n", vaziaFila());
             consumeQueue();
             envioOk = checaEnvioArquivo(pacotesEnviados);
             id_geral = 0;
@@ -108,7 +108,6 @@ void *communicateWithClient()
         {
             negociouTamanho = 0;
             readMessage();
-            consumeQueue();
             listening = !listening;
         }
         else
