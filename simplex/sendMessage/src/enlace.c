@@ -157,6 +157,7 @@ void negociaTamanhoQuadro()
 
 void *consumeQueue()
 {
+    iniciaFila();
     while (1)
     {
         if (!vaziaFila())
