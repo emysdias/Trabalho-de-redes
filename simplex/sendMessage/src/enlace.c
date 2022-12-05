@@ -74,14 +74,17 @@ int checaEnvioArquivo(int pacotesEnviados)
 
 void sendMessageSocket(char mensagem[MAX_MSG])
 {
-    char aux[10];
+    char aux[10], len[10];
+    int tam = strlen(mensagem);
     PDU pdu;
     pdu.source = "127.0.0.1";
-    pdu.target = "127.0.0.1";
+    pdu.target = IP_SERVIDOR;
     pdu.data = mensagem;
-    pdu.lenght = "50";
+    sprintf(len, "%d", tam);
+    pdu.lenght = len;
     sprintf(aux, "%d", ++id_geral);
     pdu.id = aux;
+
     if (!strcmp(mensagem, "FIM"))
     {
         sprintf(aux, "%d", pacotesEnviados);
