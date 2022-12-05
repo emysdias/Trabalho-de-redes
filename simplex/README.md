@@ -48,4 +48,6 @@ Para executar o projeto, é preciso ter um arquivo dentro da pasta sendMessage/f
 
 - Após o bin/run será feito umas perguntas como "Digite o nome do arquivo de mensagens: ", onde deve ser digitado o nome do arquivo, o arquivo teste é o 'mensagens.txt', para escolher ele, deve ser digitado somente o 'mensagens'.
 
-- Depois do arquivo vem a pergunta "Digite o tamanho desejado para o quadro: ", onde aqui deve ser digitado o tamanho da área de dados da PDU de enlace desejado, exemplo 50, com isto, vai ser mostrado 50 caracteres no client.
+- Depois do arquivo vem a pergunta "Digite o tamanho desejado para o quadro: ", onde aqui deve ser digitado o tamanho da área de dados da PDU de enlace desejado, exemplo 50, com isto, vai ser mostrado 50 caracteres no client. A negociação só termina quando os dois hosts chegam ao mesmo número de caracteres.
+
+- A primeira comunicação possui um erro forçado em que um pacote não é enviado, forçando que a comunicação seja refeita. Por conta disso, aparece uma mensagem de que a comunicação falhou e será refeita.
