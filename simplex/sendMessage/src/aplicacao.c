@@ -99,7 +99,6 @@ void *readMessage()
 
 void *readFile()
 {
-
     iniciaFila();
     while (1)
     {
