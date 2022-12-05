@@ -13,7 +13,7 @@ void pegarNomeArquivo(char msg[10])
 
 void apagarConteudoArquivo()
 {
-    char localArquivo[300] = {"../listenMessage/files/"};
+    char localArquivo[300] = {"../sendMessage/resultFile/"};
     if ((file = fopen(strcat(localArquivo, nomeArquivo), "w")) == NULL) // le arquivo digitado
     {
         printf("Erro ao abrir arquivo\n");
@@ -24,7 +24,7 @@ void apagarConteudoArquivo()
 
 void criaArquivo(char msg[300])
 {
-    char localArquivo[300] = {"../listenMessage/files/"};
+    char localArquivo[300] = {"../sendMessage/resultFile/"};
     if ((file = fopen(strcat(localArquivo, nomeArquivo), "a+")) != NULL) // le arquivo digitado
     {
         fprintf(file, "%s", msg);
