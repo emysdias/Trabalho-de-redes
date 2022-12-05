@@ -53,3 +53,4 @@ dkms.conf
 
 # Binaries files
 run
+listenMessage/files/*.txt
