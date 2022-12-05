@@ -82,7 +82,11 @@ void sendMessageSocket(char mensagem[MAX_MSG])
     pdu.lenght = "50";
     sprintf(aux, "%d", ++id_geral);
     pdu.id = aux;
-
+    if (!strcmp(mensagem, "FIM"))
+    {
+        sprintf(aux, "%d", pacotesEnviados);
+        pdu.id = aux;
+    }
     int buffer_len = 0;
     char *buffer = serialize(pdu, &buffer_len);
 

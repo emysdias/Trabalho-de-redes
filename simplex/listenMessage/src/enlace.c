@@ -99,11 +99,12 @@ void deserializeMessage(char *msg)
     pdu = deserialize(msg);
     if (!strcmp(pdu.data, "FIM"))
     {
-        int finalId = atoi(pdu.id);
+        int pacotesEnviados = atoi(pdu.id);
         sprintf(pacotes, "%d", pacotesRecebidos);
         printf("Enviando pacotes recebidos: %s\n", pacotes);
         rc = sendto(sd, pacotes, MAX_MSG, 0, (struct sockaddr *)&endCli, sizeof(endCli));
-        if (finalId - 1 == pacotesRecebidos)
+        printf("PacotesEnviados: %d PacotesRecebidos: %d\n", pacotesEnviados, pacotesRecebidos);
+        if (pacotesEnviados == pacotesRecebidos)
         {
             negociouTamanho = 0;
             recebeNomeArquivo = 0;
