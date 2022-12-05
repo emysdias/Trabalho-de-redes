@@ -3,4 +3,8 @@ extern int negociouTamanho;
 extern void negociaTamanhoQuadro();
 extern void mandaNomeArquivo(char[300]);
 extern int checaEnvioArquivo();
+extern void *consumeQueue();
+extern void *listenOtherSide();
 extern int id_geral;
+extern int listening;
+extern int server;

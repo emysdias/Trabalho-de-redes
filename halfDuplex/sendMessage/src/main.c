@@ -9,13 +9,12 @@ int main(int argc, char *argv[])
 {
     // Thread para leitura da fila e escrita no socket
     pthread_t socket;
-    pthread_create(&socket, NULL, createSocket, NULL);
+    int isHostA = atoi(argv[1]);
+    if (isHostA)
+        pthread_create(&socket, NULL, createSocketA, NULL);
+    else
+        pthread_create(&socket, NULL, createSocketB, NULL);
 
-    // Thread para capturar arquivo
-    pthread_t getMessage;
-    pthread_create(&getMessage, NULL, readFile, NULL);
-
-    pthread_join(getMessage, NULL); // Blocante
     pthread_join(socket, NULL);
     return 0;
 }
