@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include "../includes/queue.h"
 #include "../includes/socketC.h"
+#include "../includes/enlace.h"
 
 #define SIZE 300
 
@@ -23,7 +24,6 @@ void cutMessage(char *mensagem, int quantidadeCaracter)
         if (j == quantidadeCaracter - 2)
         {
             palavra[++j] = '\0';
-            printf("Inserindo na fila: %s\n", palavra);
             insereFila(palavra);
             pacotesEnviados++;
             memset(palavra, 0x0, SIZE);
@@ -95,4 +95,14 @@ void *readMessage()
         envioOk = 0;
     }
     fclose(file);
+}
+
+void *readFile()
+{
+
+    iniciaFila();
+    while (1)
+    {
+        readMessage();
+    }
 }

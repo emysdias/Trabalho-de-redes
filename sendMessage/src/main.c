@@ -5,26 +5,15 @@
 #include "../includes/queue.h"
 #include "../includes/socketC.h"
 
-void *sendMessage()
-{
-
-    iniciaFila();
-    while (1)
-    {
-        readMessage();
-    }
-}
-
 int main(int argc, char *argv[])
 {
-    // Thread para leitura da fila e escrita no socket - TO DO
+    // Thread para leitura da fila e escrita no socket
     pthread_t socket;
     pthread_create(&socket, NULL, createSocket, NULL);
 
-    // Thread para capturar mensagem do usuario
-
+    // Thread para capturar arquivo
     pthread_t getMessage;
-    pthread_create(&getMessage, NULL, sendMessage, NULL);
+    pthread_create(&getMessage, NULL, readFile, NULL);
 
     pthread_join(getMessage, NULL); // Blocante
     pthread_join(socket, NULL);
