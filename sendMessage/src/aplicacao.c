@@ -89,8 +89,8 @@ void *readMessage()
             }
             insereFila("FIM");
             envioOk = checaEnvioArquivo(pacotesEnviados);
+            id_geral = 0;
         }
-        id_geral = 0;
         negociouTamanho = 0;
         envioOk = 0;
     }
