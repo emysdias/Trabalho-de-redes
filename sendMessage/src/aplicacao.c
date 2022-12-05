@@ -8,6 +8,8 @@
 #define SIZE 300
 
 char quantidade_caracter[10] = "-1";
+int envioOk = 0;
+int pacotesEnviados = 0;
 
 void cutMessage(char *mensagem, int quantidadeCaracter)
 {
@@ -21,7 +23,9 @@ void cutMessage(char *mensagem, int quantidadeCaracter)
         if (j == quantidadeCaracter - 2)
         {
             palavra[++j] = '\0';
+            printf("Inserindo na fila: %s\n", palavra);
             insereFila(palavra);
+            pacotesEnviados++;
             memset(palavra, 0x0, SIZE);
             j = -1;
         }
@@ -31,16 +35,23 @@ void cutMessage(char *mensagem, int quantidadeCaracter)
     {
         palavra[++j] = '\0';
         insereFila(palavra);
+        pacotesEnviados++;
         memset(palavra, 0x0, SIZE);
     }
     j = 0;
+}
+
+FILE *leArquivo(char resposta[SIZE])
+{
+    char localArquivo[SIZE] = {"../sendMessage/files/"};
+    return fopen(strcat(localArquivo, resposta), "r");
 }
 
 void *readMessage()
 {
     int j = 0;
     char mensagem[SIZE];
-    char localArquivo[SIZE] = {"../sendMessage/files/"};
+
     char resposta[SIZE];
     char palavra[SIZE];
     char *conteudoArquivo;
@@ -52,7 +63,8 @@ void *readMessage()
 
     strcat(resposta, ".txt");
 
-    if ((file = fopen(strcat(localArquivo, resposta), "r")) == NULL) // le arquivo digitado
+    file = leArquivo(resposta);
+    if (file == NULL) // le arquivo digitado
     {
         printf("Arquivo não existe\n");
         exit(1);
@@ -66,13 +78,21 @@ void *readMessage()
         conteudoArquivo = (int *)malloc(atoi(quantidade_caracter) * SIZE);
         printf("Tamanho utilizado: %s\n", quantidade_caracter);
         int tamanhoLimite = atoi(quantidade_caracter);
-        char mensagem[tamanhoLimite + 1];
-        while (fscanf(file, " %[^\n]", conteudoArquivo) != EOF)
+        while (!envioOk)
         {
-            strcat(conteudoArquivo, "\n");
-            cutMessage(conteudoArquivo, tamanhoLimite);
+            pacotesEnviados = 0;
+            file = leArquivo(resposta);
+            while (fscanf(file, " %[^\n]", conteudoArquivo) != EOF)
+            {
+                strcat(conteudoArquivo, "\n");
+                cutMessage(conteudoArquivo, tamanhoLimite);
+            }
+            insereFila("FIM");
+            envioOk = checaEnvioArquivo(pacotesEnviados);
         }
-        insereFila("FIM");
+        id_geral = 0;
+        negociouTamanho = 0;
+        envioOk = 0;
     }
     fclose(file);
 }

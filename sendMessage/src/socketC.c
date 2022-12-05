@@ -23,6 +23,7 @@ int sd, rc, i;
 struct sockaddr_in ladoCli;  /* dados do cliente local   */
 struct sockaddr_in ladoServ; /* dados do servidor remoto */
 int negociouTamanho = 0;
+int id_geral = 0;
 
 typedef struct
 {
@@ -30,6 +31,7 @@ typedef struct
   char *target;
   char *data;
   char *lenght;
+  char *id;
 } PDU;
 
 char *serialize(PDU pdu, int *buffer_len)
@@ -38,19 +40,26 @@ char *serialize(PDU pdu, int *buffer_len)
   int target_len = strlen(pdu.target);
   int data_len = strlen(pdu.data);
   int lenght_len = strlen(pdu.lenght);
+  int id_len = strlen(pdu.id);
 
-  int size = 4 * sizeof(int) + (source_len + target_len + data_len + lenght_len);
+  int size = 5 * sizeof(int) + (source_len + target_len + data_len + lenght_len + id_len);
 
   char *buf = malloc(sizeof(char) * (size + 1));
 
   memcpy(buf, &source_len, sizeof(int));
   memcpy(buf + sizeof(int), pdu.source, source_len);
+
   memcpy(buf + sizeof(int) + source_len, &target_len, sizeof(int));
   memcpy(buf + 2 * sizeof(int) + source_len, pdu.target, target_len);
+
   memcpy(buf + 2 * sizeof(int) + source_len + target_len, &data_len, sizeof(int));
   memcpy(buf + 3 * sizeof(int) + source_len + target_len, pdu.data, data_len);
+
   memcpy(buf + 3 * sizeof(int) + source_len + target_len + data_len, &lenght_len, sizeof(int));
   memcpy(buf + 4 * sizeof(int) + source_len + target_len + data_len, pdu.lenght, lenght_len);
+
+  memcpy(buf + 4 * sizeof(int) + source_len + target_len + data_len + lenght_len, &id_len, sizeof(int));
+  memcpy(buf + 5 * sizeof(int) + source_len + target_len + data_len + lenght_len, pdu.id, id_len);
   buf[size] = '\0';
 
   *buffer_len = size;
@@ -58,13 +67,32 @@ char *serialize(PDU pdu, int *buffer_len)
   return buf;
 }
 
+int checaEnvioArquivo(int pacotesEnviados)
+{
+  char pacotesRecebidos[10];
+  memset(pacotesRecebidos, 0x0, 10);
+  recv(sd, pacotesRecebidos, sizeof(pacotesRecebidos), 0);
+
+  int pacotes = atoi(pacotesRecebidos);
+  printf("Pacotes recebidos: %d Pacotes Enviados: %d\n", pacotes, pacotesEnviados);
+  if (pacotes == pacotesRecebidos)
+  {
+    printf("Problema com a comunicacao! Sera realizada uma nova tentativa\n");
+    return 0;
+  }
+  return 1;
+}
+
 void sendMessageSocket(char mensagem[MAX_MSG])
 {
+  char aux[10];
   PDU pdu;
   pdu.source = "127.0.0.1";
   pdu.target = "127.0.0.1";
   pdu.data = mensagem;
   pdu.lenght = "50";
+  sprintf(aux, "%d", ++id_geral);
+  pdu.id = aux;
 
   int buffer_len = 0;
   char *buffer = serialize(pdu, &buffer_len);
